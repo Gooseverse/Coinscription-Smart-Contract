@@ -1,0 +1,28 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Coinscription {
+    bool private locked;
+
+    modifier nonReentrant() {
+        require(!locked, "Reentrant call");
+        locked = true;
+        _;
+        locked = false;
+    }
+
+    // Rest of the contract...
+}
+
+apply the nonReentrant modifier to functions that require protection against reentrancy attacks. 
+
+function makePayment() external payable nonReentrant {
+    require(wrappedAddresses[msg.sender] != address(0), "Wrapped address not found");
+    
+    address receiver = wrappedAddresses[msg.sender];
+    uint256 amount = msg.value;
+
+    // You can add additional logic to handle payments and security
+    
+    emit PaymentReceived(msg.sender, receiver, amount);
+}
