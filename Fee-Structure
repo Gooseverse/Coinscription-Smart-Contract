@@ -1,0 +1,44 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Coinscription {
+    mapping(address => address) public wrappedAddresses;
+    mapping(address => uint256) public depositFee;
+
+    event WrappedAddressCreated(address indexed ethereumAddress, address indexed wrappedAddress);
+    event PaymentReceived(address indexed sender, address indexed receiver, uint256 amount);
+
+    constructor() {
+        // Set deposit fee (0.01 ETH) for the life of each Ethscription
+        depositFee[msg.sender] = 0.01 ether;
+    }
+
+    function depositEthscription() public payable {
+        require(msg.value >= depositFee[msg.sender], "Insufficient deposit fee");
+        
+        address ethereumAddress = msg.sender;
+        address wrappedAddress = generateWrappedAddress(ethereumAddress);
+        
+        wrappedAddresses[ethereumAddress] = wrappedAddress;
+
+        emit WrappedAddressCreated(ethereumAddress, wrappedAddress);
+    }
+
+    function generateWrappedAddress(address ethereumAddress) private view returns (address) {
+        // Logic to generate wrapped address based on ethereumAddress
+        return address(uint160(uint256(keccak256(abi.encodePacked(ethereumAddress, block.timestamp)))));
+    }
+
+    function makePayment() public payable {
+        require(wrappedAddresses[msg.sender] != address(0), "Wrapped address not found");
+        
+        address receiver = wrappedAddresses[msg.sender];
+        uint256 amount = msg.value;
+
+        // You can add additional logic to handle payments and security
+        
+        emit PaymentReceived(msg.sender, receiver, amount);
+    }
+
+    // Rest of the contract...
+}
