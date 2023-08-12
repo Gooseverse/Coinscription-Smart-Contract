@@ -12,7 +12,7 @@ Seamless integration with the coinscription.com website for payments.
 Getting Started
 
 Clone the repository:
-git clone https://github.com/your-username/coinscription-smart-contract.git
+git clone https://github.com/gooseverse/coinscription-smart-contract.git
 
 Install the required dependencies (if any).
 Deploy the CoinscriptionSmartContract.sol using your preferred Ethereum development environment or a testnet.
