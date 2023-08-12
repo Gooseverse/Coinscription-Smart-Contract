@@ -1,0 +1,49 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Coinscription {
+    address public owner;
+    bool public paused;
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only owner");
+        _;
+    }
+
+    modifier whenNotPaused() {
+        require(!paused, "Contract is paused");
+        _;
+    }
+
+    // Constructor to set the owner
+    constructor() {
+        owner = msg.sender;
+    }
+
+    // Withdrawal function
+    function withdrawEthscription() external onlyOwner whenNotPaused {
+        require(wrappedAddresses[msg.sender] != address(0), "Wrapped address not found");
+        uint256 amount = balances[msg.sender];
+        require(amount > 0, "No balance to withdraw");
+
+        // Prevent reentrancy
+        locked = true;
+
+        balances[msg.sender] = 0;
+        // Implement logic for transferring Ethscriptions
+
+        locked = false;
+    }
+
+    // Emergency pause function
+    function pauseContract() external onlyOwner {
+        paused = true;
+    }
+
+    // Emergency unpause function
+    function unpauseContract() external onlyOwner {
+        paused = false;
+    }
+
+    // Rest of the contract...
+}
